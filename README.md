@@ -35,8 +35,8 @@ All 15 steps are documented in [`src/setup-guide.md`](src/setup-guide.md).
 
 **What was configured:**
 
-- **Root folder** at `C:\Users\[YOUR-USERNAME]\OneDrive\Claude\Claude Code\` — all config,
-  memory, and projects in one place, synced via OneDrive.
+- **Root folder** at `C:\Users\[YOUR-USERNAME]\your cloud sync folder\Claude\Claude Code\` — all config,
+  memory, and projects in one place, synced via your cloud sync folder.
 
 - **Global CLAUDE.md** — persistent instructions loaded in every session: tone,
   code conventions, shell rules, workflow preferences.
@@ -44,7 +44,7 @@ All 15 steps are documented in [`src/setup-guide.md`](src/setup-guide.md).
 - **Memory system** — auto-memory (Claude-managed) plus manual `memory/` files
   for environment state, decisions, and session context.
 
-- **`.claude` symlinked to OneDrive** — session history, memory, and settings
+- **`.claude` symlinked to your cloud sync folder** — session history, memory, and settings
   are backed up and survive a machine rebuild.
 
 - **MCP servers** — Sequential Thinking (reasoning), Context7 (live library
@@ -91,7 +91,7 @@ Key technical decisions made during setup. Full context in `memory/progress.md`.
 | **Microsoft Learn MCP** instead of static azure.md | Live, official, always current. No maintenance needed. |
 | **nvm-windows** for Node.js | Same pattern as pyenv-win for Python; easy version switching. |
 | **pyenv-win** for Python | Consistent version management; Python 3.13.2 global. |
-| **OneDrive for all config** | Automatic sync + backup. No separate backup tooling needed. |
+| **your cloud sync folder for all config** | Automatic sync + backup. No separate backup tooling needed. |
 | **No hooks yet** | Manual `/update-memory` is sufficient. Add hooks when a recurring trigger is clear. |
 | **Single setup-guide.md** | One file is easier to navigate and maintain than many small ones. |
 
@@ -99,6 +99,6 @@ Key technical decisions made during setup. Full context in `memory/progress.md`.
 
 ## Related Files
 
-- `C:\Users\[YOUR-USERNAME]\OneDrive\Claude\Claude Code\CLAUDE.md` — global instructions
-- `C:\Users\[YOUR-USERNAME]\OneDrive\Claude\Claude Code\knowledge\` — cross-project reference
-- `C:\Users\[YOUR-USERNAME]\OneDrive\Claude\Claude Code\projects\_template\` — new project scaffold
+- `C:\Users\[YOUR-USERNAME]\your cloud sync folder\Claude\Claude Code\CLAUDE.md` — global instructions
+- `C:\Users\[YOUR-USERNAME]\your cloud sync folder\Claude\Claude Code\knowledge\` — cross-project reference
+- `C:\Users\[YOUR-USERNAME]\your cloud sync folder\Claude\Claude Code\projects\_template\` — new project scaffold

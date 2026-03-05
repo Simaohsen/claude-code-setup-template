@@ -50,7 +50,7 @@ issues. Claude Code was built for POSIX environments; WSL gives it that natively
 
 ### If you choose WSL 2:
 Follow this guide normally for configuration (CLAUDE.md, memory, MCP, commands) —
-they are all shared via OneDrive. For the WSL-specific installation steps, see
+they are all shared via your cloud sync folder. For the WSL-specific installation steps, see
 **Phase 5** below. Full architecture details are in `docs/planning/hybrid-setup-plan.md`.
 
 ### If you choose Native Windows:
@@ -82,7 +82,7 @@ claude --version
 **Goal:** Create a dedicated home for all Claude Code configuration, memory,
 and projects — separate from any individual code project.
 
-**Location:** `C:\Users\[YOUR-USERNAME]\OneDrive\Claude\Claude Code\`
+**Location:** `C:\Users\[YOUR-USERNAME]\[YOUR-CLOUD-FOLDER]\Claude Code\`
 
 ```
 Claude Code/
@@ -102,9 +102,9 @@ Claude Code/
 ```
 
 **Why:** Keeps Claude configuration versioned, organized, and portable.
-OneDrive location ensures it syncs and is backed up automatically.
+Cloud sync location ensures it is backed up automatically.
 
-Verify: `ls "C:/Users/[YOUR-USERNAME]/OneDrive/Claude/Claude Code/"` shows the structure above.
+Verify: `ls "C:/Users/[YOUR-USERNAME]/[YOUR-CLOUD-FOLDER]/Claude Code/"` shows the structure above.
 
 ---
 
@@ -113,10 +113,10 @@ Verify: `ls "C:/Users/[YOUR-USERNAME]/OneDrive/Claude/Claude Code/"` shows the s
 **Goal:** Define global behaviour, preferences, and conventions that apply
 to every Claude Code session rooted at the Claude Code folder.
 
-**File:** `C:\Users\[YOUR-USERNAME]\OneDrive\Claude\Claude Code\CLAUDE.md`
+**File:** `C:\Users\[YOUR-USERNAME]\[YOUR-CLOUD-FOLDER]\Claude Code\CLAUDE.md`
 
 **Content:** Create this file with the following content. Adapt the auto-memory
-path section to your own username and OneDrive path.
+path section to your own username and cloud sync folder path.
 
 ```markdown
 # Global Claude Code Instructions
@@ -176,7 +176,7 @@ Claude Code/
 
 #### WSL 2 (primary)
 - Use native bash for all operations. Tools on PATH are available immediately after install.
-- Access Windows files via `/mnt/c/`. Shared config lives on OneDrive via symlink at `~/.claude`.
+- Access Windows files via `/mnt/c/`. Shared config lives in your cloud sync folder via symlink at `~/.claude`.
 - MCP servers use plain `npx` — no `cmd /c` wrapper needed.
 - No junction/symlink EEXIST errors; Write/Edit tools work normally.
 
@@ -218,11 +218,11 @@ Answers: *"Where are we?"*. Updated regularly via `/update-memory`.
 #### Auto-Memory Path (WSL — adapt to your username)
 
 The system prompt path `/home/[user]/.claude/projects/...` is incorrect — `~/.claude` is a
-symlink to OneDrive, so that directory does not exist.
+symlink to your cloud sync folder, so that directory does not exist.
 
 **Always write auto-memory to the real path:**
 ​```
-/mnt/c/Users/[YOUR-USERNAME]/OneDrive/Claude/.claude/projects/[encoded-project-path]/memory/MEMORY.md
+/mnt/c/Users/[YOUR-USERNAME]/[YOUR-CLOUD-FOLDER]/.claude/projects/[encoded-project-path]/memory/MEMORY.md
 ​```
 
 To find the correct project folder name: `ls ~/.claude/projects/`
@@ -274,18 +274,18 @@ without being told them again.
 
 ---
 
-### [x] Step 5: Symlink .claude to OneDrive
+### [x] Step 5: Symlink .claude to Your Cloud Sync Folder
 
 **Goal:** Back up and sync the `~/.claude` folder (which stores all Claude
-Code session history, memory, and config) to OneDrive.
+Code session history, memory, and config) to your cloud sync folder.
 
-**Why:** By default `~/.claude` is only local. Symlinking it to OneDrive
+**Why:** By default `~/.claude` is only local. Symlinking it to your cloud sync folder
 means it's backed up automatically and survives a machine rebuild.
 
 **Steps (run in cmd.exe as Admin, with Claude Code closed):**
 ```cmd
 rmdir /S /Q C:\Users\[YOUR-USERNAME]\.claude
-mklink /D C:\Users\[YOUR-USERNAME]\.claude C:\Users\[YOUR-USERNAME]\OneDrive\Claude\.claude
+mklink /D C:\Users\[YOUR-USERNAME]\.claude C:\Users\[YOUR-USERNAME]\[YOUR-CLOUD-FOLDER]\.claude
 ```
 
 **Prerequisite:** Windows Developer Mode must be enabled (allows symlink
@@ -295,7 +295,7 @@ creation without elevation).
 Verify:
 ```bash
 ls -la ~/  | grep .claude
-# Should show: .claude -> /c/Users/[YOUR-USERNAME]/OneDrive/Claude/.claude
+# Should show: .claude -> /c/Users/[YOUR-USERNAME]/[YOUR-CLOUD-FOLDER]/.claude
 ```
 
 ---
@@ -310,7 +310,7 @@ ls -la ~/  | grep .claude
 
 There are two separate settings files:
 
-**`~/.claude/settings.json`** — shared config on OneDrive (applies everywhere).
+**`~/.claude/settings.json`** — shared config in your cloud sync folder (applies everywhere).
 This file controls the model, auto-approved tools, and hooks. The hooks here
 reference the scripts created in Step 10.
 
@@ -340,7 +340,7 @@ reference the scripts created in Step 10.
         "hooks": [
           {
             "type": "command",
-            "command": "powershell.exe -ExecutionPolicy Bypass -File \"C:\\Users\\[YOUR-USERNAME]\\OneDrive\\Claude\\Claude Code\\hooks\\notify.ps1\""
+            "command": "powershell.exe -ExecutionPolicy Bypass -File \"C:\\Users\\[YOUR-USERNAME]\\[YOUR-CLOUD-FOLDER]\\Claude Code\\hooks\\notify.ps1\""
           }
         ]
       }
@@ -351,7 +351,7 @@ reference the scripts created in Step 10.
         "hooks": [
           {
             "type": "command",
-            "command": "powershell.exe -ExecutionPolicy Bypass -File \"C:\\Users\\[YOUR-USERNAME]\\OneDrive\\Claude\\Claude Code\\hooks\\block-dangerous.ps1\""
+            "command": "powershell.exe -ExecutionPolicy Bypass -File \"C:\\Users\\[YOUR-USERNAME]\\[YOUR-CLOUD-FOLDER]\\Claude Code\\hooks\\block-dangerous.ps1\""
           }
         ]
       },
@@ -360,7 +360,7 @@ reference the scripts created in Step 10.
         "hooks": [
           {
             "type": "command",
-            "command": "powershell.exe -ExecutionPolicy Bypass -File \"C:\\Users\\[YOUR-USERNAME]\\OneDrive\\Claude\\Claude Code\\hooks\\protected-files.ps1\""
+            "command": "powershell.exe -ExecutionPolicy Bypass -File \"C:\\Users\\[YOUR-USERNAME]\\[YOUR-CLOUD-FOLDER]\\Claude Code\\hooks\\protected-files.ps1\""
           }
         ]
       }
@@ -371,7 +371,7 @@ reference the scripts created in Step 10.
         "hooks": [
           {
             "type": "command",
-            "command": "powershell.exe -ExecutionPolicy Bypass -File \"C:\\Users\\[YOUR-USERNAME]\\OneDrive\\Claude\\Claude Code\\hooks\\session-context.ps1\""
+            "command": "powershell.exe -ExecutionPolicy Bypass -File \"C:\\Users\\[YOUR-USERNAME]\\[YOUR-CLOUD-FOLDER]\\Claude Code\\hooks\\session-context.ps1\""
           }
         ]
       }
@@ -382,7 +382,7 @@ reference the scripts created in Step 10.
         "hooks": [
           {
             "type": "command",
-            "command": "powershell.exe -ExecutionPolicy Bypass -File \"C:\\Users\\[YOUR-USERNAME]\\OneDrive\\Claude\\Claude Code\\hooks\\format-on-stop.ps1\""
+            "command": "powershell.exe -ExecutionPolicy Bypass -File \"C:\\Users\\[YOUR-USERNAME]\\[YOUR-CLOUD-FOLDER]\\Claude Code\\hooks\\format-on-stop.ps1\""
           }
         ]
       }
@@ -391,7 +391,7 @@ reference the scripts created in Step 10.
 }
 ```
 
-**`~/.claude/settings.local.json`** — WSL-specific override (not on OneDrive,
+**`~/.claude/settings.local.json`** — WSL-specific override (not in the cloud sync folder,
 created per-machine in WSL). Replaces PowerShell hook commands with bash equivalents:
 
 ```json
@@ -404,7 +404,7 @@ created per-machine in WSL). Replaces PowerShell hook commands with bash equival
         "hooks": [
           {
             "type": "command",
-            "command": "bash \"/mnt/c/Users/[YOUR-USERNAME]/OneDrive/Claude/Claude Code/hooks/notify.sh\""
+            "command": "bash \"/mnt/c/Users/[YOUR-USERNAME]/[YOUR-CLOUD-FOLDER]/Claude Code/hooks/notify.sh\""
           }
         ]
       }
@@ -415,7 +415,7 @@ created per-machine in WSL). Replaces PowerShell hook commands with bash equival
         "hooks": [
           {
             "type": "command",
-            "command": "bash \"/mnt/c/Users/[YOUR-USERNAME]/OneDrive/Claude/Claude Code/hooks/block-dangerous.sh\""
+            "command": "bash \"/mnt/c/Users/[YOUR-USERNAME]/[YOUR-CLOUD-FOLDER]/Claude Code/hooks/block-dangerous.sh\""
           }
         ]
       },
@@ -424,7 +424,7 @@ created per-machine in WSL). Replaces PowerShell hook commands with bash equival
         "hooks": [
           {
             "type": "command",
-            "command": "bash \"/mnt/c/Users/[YOUR-USERNAME]/OneDrive/Claude/Claude Code/hooks/protected-files.sh\""
+            "command": "bash \"/mnt/c/Users/[YOUR-USERNAME]/[YOUR-CLOUD-FOLDER]/Claude Code/hooks/protected-files.sh\""
           }
         ]
       }
@@ -435,7 +435,7 @@ created per-machine in WSL). Replaces PowerShell hook commands with bash equival
         "hooks": [
           {
             "type": "command",
-            "command": "bash \"/mnt/c/Users/[YOUR-USERNAME]/OneDrive/Claude/Claude Code/hooks/session-context.sh\""
+            "command": "bash \"/mnt/c/Users/[YOUR-USERNAME]/[YOUR-CLOUD-FOLDER]/Claude Code/hooks/session-context.sh\""
           }
         ]
       }
@@ -446,7 +446,7 @@ created per-machine in WSL). Replaces PowerShell hook commands with bash equival
         "hooks": [
           {
             "type": "command",
-            "command": "bash \"/mnt/c/Users/[YOUR-USERNAME]/OneDrive/Claude/Claude Code/hooks/format-on-stop.sh\""
+            "command": "bash \"/mnt/c/Users/[YOUR-USERNAME]/[YOUR-CLOUD-FOLDER]/Claude Code/hooks/format-on-stop.sh\""
           }
         ]
       }
@@ -488,7 +488,7 @@ Run `/mcp` to confirm all 3 servers are connected.
 
 **Goal:** Add project-agnostic slash commands that speed up recurring workflows.
 
-**Location:** `C:\Users\[YOUR-USERNAME]\OneDrive\Claude\Claude Code\.claude\commands\`
+**Location:** `C:\Users\[YOUR-USERNAME]\[YOUR-CLOUD-FOLDER]\Claude Code\.claude\commands\`
 
 Each `.md` file in this folder becomes a `/command-name` slash command.
 
@@ -644,9 +644,9 @@ and validates against the full schema.
 
 **Goal:** Run shell commands automatically in response to Claude Code events.
 
-**Location:** `Claude Code/hooks/` — scripts are shared via OneDrive and
+**Location:** `Claude Code/hooks/` — scripts are shared via your cloud sync folder and
 referenced from `settings.json` (Step 6). Create both `.ps1` (Windows) and
-`.sh` (WSL) versions for each hook since both environments use the same OneDrive config.
+`.sh` (WSL) versions for each hook since both environments use the same shared config.
 
 **Hooks configured:**
 
@@ -813,7 +813,7 @@ sessions use `.ps1`, WSL sessions use `.sh` via `settings.local.json`.
 
 Make hook scripts executable in WSL:
 ```bash
-chmod +x "/mnt/c/Users/[YOUR-USERNAME]/OneDrive/Claude/Claude Code/hooks/"*.sh
+chmod +x "/mnt/c/Users/[YOUR-USERNAME]/[YOUR-CLOUD-FOLDER]/Claude Code/hooks/"*.sh
 ```
 
 Verify: Start a Claude Code session and confirm the git context appears at the top.
@@ -1031,19 +1031,19 @@ claude --version
 
 ---
 
-### [x] Step 18: Link Claude Configuration from OneDrive
+### [x] Step 18: Link Claude Configuration from Your Cloud Sync Folder
 
 **Goal:** Share the same CLAUDE.md, memory, commands, and knowledge between WSL and
-native Windows by symlinking WSL's `~/.claude` to the OneDrive-backed config.
+native Windows by symlinking WSL's `~/.claude` to the shared cloud-backed config.
 
 ```bash
-ONEDRIVE="/mnt/c/Users/[YOUR-USERNAME]/OneDrive/Claude"
+ONEDRIVE="/mnt/c/Users/[YOUR-USERNAME]/[YOUR-CLOUD-FOLDER]"
 
-# Link ~/.claude to the shared OneDrive config
-ln -s "$ONEDRIVE/.claude" ~/.claude
+# Link ~/.claude to the shared cloud config
+ln -s "$CLOUD_FOLDER/.claude" ~/.claude
 
 # Verify
-ls -la ~/.claude        # → symlink to /mnt/c/.../OneDrive/Claude/.claude
+ls -la ~/.claude        # → symlink to /mnt/c/.../[YOUR-CLOUD-FOLDER]/.claude
 cat ~/.claude.json      # Should NOT exist yet — create it next
 ```
 
@@ -1070,7 +1070,7 @@ cat ~/.claude.json      # Should NOT exist yet — create it next
 ```
 
 **Note:** Unlike Windows, WSL uses plain `npx` — no `cmd /c` wrapper. The Windows
-`~/.claude.json` (on OneDrive) keeps `cmd /c` for the native Windows fallback.
+`~/.claude.json` (in your cloud sync folder) keeps `cmd /c` for the native Windows fallback.
 
 **Verify:**
 ```bash
@@ -1093,7 +1093,7 @@ Add the following to `~/.bashrc`:
 ```bash
 # Claude Code — open a project in VS Code via Remote-WSL
 cco() {
-  local projects_dir="/mnt/c/Users/[YOUR-USERNAME]/OneDrive/Claude/Claude Code/projects"
+  local projects_dir="/mnt/c/Users/[YOUR-USERNAME]/[YOUR-CLOUD-FOLDER]/Claude Code/projects"
   local projects=($(ls "$projects_dir" | grep -v '^_'))
 
   if [ -n "$1" ]; then
